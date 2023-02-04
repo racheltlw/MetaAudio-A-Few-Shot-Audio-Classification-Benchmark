@@ -105,6 +105,7 @@ def gen_training_stats(data_path, training_classes, norm, type, save_path, num_w
     Returns:
         array: Nested array of mean and std of training set: mean, std = []
     """
+    print(data_path, training_classes, norm, type, save_path, num_workers, params)
     #return [0 ,0.1]
     dataset =  BasicTrainingSet(data_path, training_classes)
     if type in ['spec', 'raw']:
@@ -123,7 +124,7 @@ def gen_training_stats(data_path, training_classes, norm, type, save_path, num_w
             stats_class = StatsRecorder(red_dims=(0, 1))
         # Global spec collapses all dimensions
         elif type in ['spec', 'variable_spec']:
-            stats_class = StatsRecorder(red_dims=(0, 1, 2))
+            stats_class = StatsRecorder(red_dims=(0, 1))#changed from 0,1,2 because it was failing 
     # Spec per channel only collapses batches and the time dimension
     elif norm == 'channel':
         stats_class = StatsRecorder(red_dims=(0, 2))

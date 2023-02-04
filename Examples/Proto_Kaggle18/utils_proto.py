@@ -88,7 +88,8 @@ def path_start_up(params):
     else:
         try:
             os.mkdir(task_dir)
-        except OSError:
+        except OSError as e:
+            print(e) 
             print ("Creation of the directory %s failed" % task_dir)
             sys.exit()
         else:
@@ -100,7 +101,8 @@ def path_start_up(params):
     else:
         try:
             os.mkdir(result_dir)
-        except OSError:
+        except OSError as e:
+            print(e) 
             print ("Creation of the directory %s failed" % result_dir)
             sys.exit()
         else:

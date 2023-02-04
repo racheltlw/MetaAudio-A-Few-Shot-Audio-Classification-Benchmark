@@ -24,12 +24,15 @@ import librosa
 import librosa.display
 import numpy as np
 from tqdm import tqdm
+import matplotlib
 import matplotlib.pyplot as plt
 
 ###############################################################################
 # SPECTRGRAM FUNCTION
 ###############################################################################
-def to_spectrogram(og_file_path, new_dir, length, **spec_args):
+
+
+def to_spectrogram(og_file_path, new_dir, image_dir, length, **spec_args):
     """Converts a raw audio signal into a spectogram and saves to a new path
 
     Args:
@@ -43,8 +46,8 @@ def to_spectrogram(og_file_path, new_dir, length, **spec_args):
     if np.std(audio_data) == 0.0:
         print(f'File has 0 std: {og_file_path}')
         return
-    
-    if audio_data.shape[0] < 80000:
+    print(audio_data.shape)
+    if audio_data.shape[0] < 160000:
         return
 
     audio_sum = np.sum(audio_data)
@@ -76,14 +79,18 @@ def to_spectrogram(og_file_path, new_dir, length, **spec_args):
     file_name = og_file_path.split('\\')[-1]
     file_name = file_name.split('.')[0]
     new_path = os.path.join(new_dir, file_name)
-    plt.savefig(new_path + '.png')
+    image_path = os.path.join(image_dir, file_name)
+    matplotlib.use('Agg')
+    plt.savefig(image_path + '.png')
+    plt.clf()   
+    plt.close() #for memory's sake 
     np.save(new_path, log_mel_spec)
 
 
 ###############################################################################
 # MAIN FUNCTION
 ###############################################################################
-def main(old_dir, new_dir, sample_length, spec_params):
+def main(old_dir, new_dir, image_dir, sample_length, spec_params):
     """ Mian spec conversion function. Deals with actual iteration thorugh the dataset
 
     Args:
@@ -97,6 +104,12 @@ def main(old_dir, new_dir, sample_length, spec_params):
 
     except Exception:
         print(f'Cannot create folder: {new_dir}')
+
+    try:
+        os.mkdir(image_dir)
+
+    except Exception:
+        print(f'Cannot create folder: {image_dir}')
 
     #sets working dir as array parent folder
     os.chdir(new_dir)
@@ -117,17 +130,23 @@ def main(old_dir, new_dir, sample_length, spec_params):
     for seen_class in contained_classes:
             working_dir = os.path.join(old_dir, seen_class)
             new_working_dir = os.path.join(new_dir, seen_class)
+            new_image_dir = os.path.join(image_dir, seen_class)
 
             try:
                 os.mkdir(new_working_dir)
             except Exception:
                 print(f'Already Created: {new_working_dir}')
 
+            try:
+                os.mkdir(new_image_dir)
+            except Exception:
+                print(f'Already Created: {new_image_dir}')
+
             for fname in os.listdir(working_dir):
                 if fname.endswith('.npy'):
                     file_path = os.path.join(working_dir, fname)
 
-                    to_spectrogram(file_path, new_working_dir, sample_length, **spec_params)
+                    to_spectrogram(file_path, new_working_dir, new_image_dir, sample_length, **spec_params)
                     # Update the progress bar
                     progress_bar.update(1)
 
@@ -137,6 +156,7 @@ def main(old_dir, new_dir, sample_length, spec_params):
 
 old_dir = 'C:/Users/Rachel Tan/Documents/GitHub/MetaAudio-A-Few-Shot-Audio-Classification-Benchmark/ESC-50-master/Sorted_npy'
 new_dir = 'C:/Users/Rachel Tan/Documents/GitHub/MetaAudio-A-Few-Shot-Audio-Classification-Benchmark/ESC-50-master/ESC_spec'
+image_dir = 'C:/Users/Rachel Tan/Documents/GitHub/MetaAudio-A-Few-Shot-Audio-Classification-Benchmark/ESC-50-master/Sorted_Spectrogram'
 sample_length = 5
 
 spec_params = {'sr': 16000, 
@@ -147,6 +167,7 @@ spec_params = {'sr': 16000,
 
 main(old_dir=old_dir,
         new_dir=new_dir,
+        image_dir = image_dir,
         sample_length=sample_length,
         spec_params=spec_params)
 

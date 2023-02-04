@@ -67,17 +67,17 @@ def main(params, model, device, batch_fns, seed):
         train_task_sampler = NShotTaskSampler
         val_task_sampler = NShotTaskSampler
 
-
+    #different ways that it preprocesses or loads the data in 
     background = train_dataset(data_path=params['data']['data_path'],
-                            classes = setup.train,
+                            classes = setup.train, #train split 
                             norm=params['data']['norm'],
                             stats_file_path=setup.stats_file_path)
     validation = val_dataset(data_path=params['data']['data_path'],
-                        classes = setup.val,
+                        classes = setup.val, #val split 
                         norm=params['data']['norm'],
                         stats_file_path=setup.stats_file_path)
     evaluation = val_dataset(data_path=params['data']['data_path'],
-                        classes = setup.test,
+                        classes = setup.test, #test split 
                         norm=params['data']['norm'],
                         stats_file_path=setup.stats_file_path)
 
@@ -115,7 +115,6 @@ def main(params, model, device, batch_fns, seed):
                                         num_workers=params['training']['num_workers'],
                                         collate_fn=val_coll)
 
-
     # We start with a first order MAML for additional stabiltiy
     maml = l2l.algorithms.MAML(model, lr=params['hyper']['inner_lr'], first_order=True)
 
@@ -139,7 +138,7 @@ def main(params, model, device, batch_fns, seed):
                                 q_queries=params['base']['q_queries'],
                                 device=device,
                                 trans=params['training']['trans_batch'])
-
+    print('before fit test')
     pre, post, loss, post_std = fit(
                     learner=maml,
                     optimiser=meta_opt,

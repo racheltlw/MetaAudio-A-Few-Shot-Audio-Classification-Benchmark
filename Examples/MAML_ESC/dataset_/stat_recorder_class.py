@@ -20,7 +20,9 @@ class StatsRecorder:
         """
         # initialize stats and dimensions on first batch
         if self.nobservations == 0:
-            self.mean = data.mean(dim=self.red_dims, keepdim=True)
+            print('SHAPE', data.shape) 
+            self.mean = data.mean(
+                dim=self.red_dims, keepdim=True)
             self.std  = data.std (dim=self.red_dims,keepdim=True)
             self.nobservations = data.shape[0]
             self.ndimensions   = data.shape[1]

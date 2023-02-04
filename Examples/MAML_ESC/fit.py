@@ -47,6 +47,7 @@ def fit(learner, optimiser, scheduler, warm_up_episodes, loss_fn, dataloaders, p
         train_batch, val_batch = prep_batch_fns
         trainLoader, valLoader, evalLoader = dataloaders
         train_fit_function, var_fit_function = fit_functions
+        
 
         # Chooses what type of validation step to take and sets according functions
         if params['data']['variable']:
@@ -55,7 +56,8 @@ def fit(learner, optimiser, scheduler, warm_up_episodes, loss_fn, dataloaders, p
             validation_step = validation_step_fixed
 
         # Initialises paths and logger functionality
-        extra_path_data, log_path, train_path, val_path = path_start_up(params)
+        extra_path_data, log_path, train_path, val_path = path_start_up(params) #ERROR IS HERE 
+        print('LOG PATH IS THIS', log_path)
         logger = logger_start_up(log_path)
 
         logger.info(f'All Params: {params}')
@@ -71,7 +73,7 @@ def fit(learner, optimiser, scheduler, warm_up_episodes, loss_fn, dataloaders, p
         best_val_post = 0
         # A state that can be changed and saved in paths to indicate crashed or not
         state = 'FIN'
-
+        print('Status check: I am now here!!!')
         # Initalise main loop and break functionality
         break_key = False
         logger.info('########## STARTING TRAINING ##########')

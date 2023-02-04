@@ -4,7 +4,7 @@ base:
   q_queries: 1
   cuda: 0
   num_repeats: 1
-  task_type: 'MAML_ESC_'
+  task_type: 'MAML_ESC_TRIAL_4Jan23'
 
 models: ['Hybrid']
 
@@ -19,7 +19,7 @@ hyper:
 
 
 training:
-  epochs: 200
+  epochs: 50 #200
   episodes_per_epoch: 10
   train_batch_size: 50 # 50
 
@@ -45,7 +45,7 @@ data:
   fixed: True
 
   fixed_path: 'dataset_/splits/ESC_paper_splits.npy'
-  data_path: 'X:/Datasets/ESC-50-master/ESC_spec'
+  data_path: 'C:/Users/Rachel Tan/Documents/GitHub/MetaAudio-A-Few-Shot-Audio-Classification-Benchmark/ESC-50-master/ESC_spec'
 
 split:
   train: 0.7

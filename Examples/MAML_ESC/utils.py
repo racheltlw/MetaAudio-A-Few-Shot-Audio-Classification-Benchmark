@@ -61,6 +61,8 @@ def path_start_up(params):
     # Adds on identifies for task type, total episodes and seed
     add_on = (params['base']['task_type'] + '_' + str(total_episodes) + '_seed_' +
                 str(params['base']['seed']))
+
+    
     # Grabs time and puts into wanted format
     now = datetime.now()
     now_path = now.strftime("_%d_%m__%H_%M")
@@ -68,16 +70,21 @@ def path_start_up(params):
     # All relveant identifiers except time are in the parent directory name
     result_dir = os.path.join('results', params['base']['task_type'], add_on)
 
+    print(result_dir)
+
     # Task dircetory creation first
     task_dir = os.path.join('results', params['base']['task_type'])
+
+    print(task_dir)
 
     if os.path.exists(task_dir):
         pass
     else:
         try:
-            os.mkdir(task_dir)
-        except OSError:
-            print ("Creation of the directory %s failed" % task_dir)
+            os.makedirs(task_dir)
+        except OSError as e:
+            print('ERROR is ', e) 
+            #print ("Creation of the directory %s failed" % task_dir)
             sys.exit()
         else:
             print ("Successfully created the directory %s" % task_dir)
@@ -87,9 +94,10 @@ def path_start_up(params):
         pass
     else:
         try:
-            os.mkdir(result_dir)
-        except OSError:
-            print ("Creation of the directory %s failed" % result_dir)
+            os.makedirs(result_dir)
+        except OSError as e:
+            print('ERROR is ', e) 
+           # print ("Creation of the directory %s failed" % result_dir)
             sys.exit()
         else:
             print ("Successfully created the directory %s" % result_dir)
@@ -101,7 +109,20 @@ def path_start_up(params):
     # File name for logs, includes task type and most other details
     log_file = 'MAML' + '_' + add_on + now_path + '.log'
     # Actual path to teh log file
+
     log_path = os.path.join('logs', log_file)
+
+    if os.path.exists('logs'):
+        pass
+    else:
+        try:
+            os.makedirs('logs')
+        except OSError as e:
+            print('ERROR is ', e) 
+           # print ("Creation of the directory %s failed" % result_dir)
+            sys.exit()
+        else:
+            print ("Successfully created the directory logs")
 
     return [result_dir, now_path], log_path, train_path, val_path
 

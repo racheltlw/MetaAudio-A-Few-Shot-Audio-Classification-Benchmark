@@ -87,13 +87,13 @@ if __name__ == '__main__':
         if params['data']['variable']:
             batch_funcs = [prep_batch_fixed, prep_var_eval]
         elif params['data']['variable'] == False:
-            batch_funcs = [prep_batch_fixed, prep_batch_fixed]
+            batch_funcs = [prep_batch_fixed, prep_batch_fixed] #example uses this 
         else:
             raise ValueError('What kind of data is it then?')
 
         # Perform multiple experiments 
         stored_results = []
-        model_loop = trange(1, NUM_REPEATS+1, file=sys.stdout, desc=name)
+        model_loop = trange(1, NUM_REPEATS+1, file=sys.stdout, desc=name) #to create the progress bar 
         for i in model_loop:
             # Generate a random seed with upper limit 1000 and sets it for modules
             #seed = np.random.randint(low=0, high=1000)
@@ -103,14 +103,14 @@ if __name__ == '__main__':
 
             model = grab_model(name, model_params[name], out_dim=params['base']['n_way'])
             model = model.to(device, dtype=torch.double)
-    
+            
             pre, post, loss, post_std = single_run_main(params=params, 
                                                 model=model,
                                                 device=device,
                                                 batch_fns=batch_funcs,
                                                 seed=seed)
 
-            
+           
             stored_results.append(post)
             f = open(params['base']['task_type'] + ".txt", "a")
             f.write(f'{str(post)}, {str(post_std)}\n')
